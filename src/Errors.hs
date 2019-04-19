@@ -1,7 +1,6 @@
 module Errors
-    ( Error
-    )
-where
+  ( Error
+  ) where
 
-data Error
-    = CSVParseError String
+data Error =
+  CSVParseError String

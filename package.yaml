@@ -25,6 +25,10 @@ dependencies:
 - cassava
 - bytestring
 - vector
+- split
+- kdt
+- random-shuffle
+- MonadRandom
 library:
   source-dirs: src
 
@@ -49,3 +53,4 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - mle-ue2
+    - hspec
