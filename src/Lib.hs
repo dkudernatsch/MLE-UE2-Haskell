@@ -17,23 +17,22 @@ import qualified Data.Vector as V
 import qualified Control.Monad.Random as RND
 
 
-runProgram:: DataSet -> [[(ValidationResult, Int)]]
-runProgram dataSetResult =
-  let kfold = fromDataSet dataSetResult 10
+runKFold:: Int -> Int -> DataSet -> [[(ValidationResult, Int)]]
+runKFold folds k dataSetResult =
+  let kfold = fromDataSet dataSetResult folds
       step1 = kFoldSteps kfold
-      valid = map validateStep step1
+      valid = map (validateStep k) step1
       valid2 = fmap (group.sort) valid
       counts = (map . map) (\l-> (head l, length l))
   in counts valid2
 
 someFunc :: IO ()
 someFunc = do
-  dataSetResult <- readCsv "C:\\Users\\Daniel\\IdeaProjects\\mle-ue2\\data\\iris.data"
+  dataSetResult <- readCsv "C:\\Users\\Daniel\\IdeaProjects\\mle-ue2\\data\\winequality-red.csv"
   case dataSetResult of
     Left err -> print err
     Right dataSet -> do
       let rndDataset = shuffle dataSet
       dataset <- RND.evalRandIO rndDataset
-      let result = runProgram dataset
-      mapM_ print result
-
+      let result = runKFold 10 10 dataset
+      print dataSet
