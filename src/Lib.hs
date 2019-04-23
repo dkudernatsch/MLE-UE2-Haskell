@@ -1,7 +1,11 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Lib
-  ( someFunc
+  ( runKFold
+  , module Csv
+  , module DataSet
+  , module Knn
+  , module KFold
   ) where
 
 import           Csv
@@ -11,28 +15,17 @@ import           KFold
 import           Knn
 
 import           Data.List
-import Control.Monad
+import           Control.Monad
 
 import qualified Data.Vector as V
-import qualified Control.Monad.Random as RND
 
 
-runKFold:: Int -> Int -> DataSet -> [[(ValidationResult, Int)]]
+runKFold:: Int -> Int -> DataSet -> [(ValidationResult, Double)]
 runKFold folds k dataSetResult =
   let kfold = fromDataSet dataSetResult folds
-      step1 = kFoldSteps kfold
-      valid = map (validateStep k) step1
+      steps = kFoldSteps kfold
+      valid = map (validateStep k) steps
       valid2 = fmap (group.sort) valid
       counts = (map . map) (\l-> (head l, length l))
-  in counts valid2
+  in summarizeResults . counts $ valid2
 
-someFunc :: IO ()
-someFunc = do
-  dataSetResult <- readCsv "C:\\Users\\Daniel\\IdeaProjects\\mle-ue2\\data\\winequality-red.csv"
-  case dataSetResult of
-    Left err -> print err
-    Right dataSet -> do
-      let rndDataset = shuffle dataSet
-      dataset <- RND.evalRandIO rndDataset
-      let result = runKFold 10 10 dataset
-      print dataSet

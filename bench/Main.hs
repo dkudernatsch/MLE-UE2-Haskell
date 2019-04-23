@@ -13,49 +13,22 @@ main :: IO ()
 main =
   defaultMain
     [ bgroup
-        "iris"
-        [ bench "k 1" $
-          nf
-            (classify (buildTree irisData) 1)
-            (DataEntry {dataPoint = V.fromList [5.1, 3.5, 1.4, 0.2], label = Label "Iris-setosa"})
-        , bench "k 5" $
-          nf
-            (classify (buildTree irisData) 5)
-            (DataEntry {dataPoint = V.fromList [5.1, 3.5, 1.4, 0.2], label = Label "Iris-setosa"})
-        , bench "k 10" $
-          nf
-            (classify (buildTree irisData) 10)
-            (DataEntry {dataPoint = V.fromList [5.1, 3.5, 1.4, 0.2], label = Label "Iris-setosa"})
-        , bench "1500 k5" $ nf (fmap (classify (buildTree irisData) 5)) (take 1500 irisDataLines)
-        , bench "15000 k5" $ nf (fmap (classify (buildTree irisData) 5)) (take 15000 irisDataLines)
-        , bench "150000 k5" $ nf (fmap (classify (buildTree irisData) 5)) (take 150000 irisDataLines)
+        "single classify"
+        [ bench "iris k 1" $ nf (classify (buildTree irisData) 1) (DataEntry {dataPoint = V.fromList [5.1, 3.5, 1.4, 0.2], label = Label "Iris-setosa"})
+        , bench "iris k 5" $ nf (classify (buildTree irisData) 5) (DataEntry {dataPoint = V.fromList [5.1, 3.5, 1.4, 0.2], label = Label "Iris-setosa"})
+        , bench "iris k 10" $ nf (classify (buildTree irisData) 10) (DataEntry {dataPoint = V.fromList [5.1, 3.5, 1.4, 0.2], label = Label "Iris-setosa"})
+        , bench "redwine k 1" $ nf (classify (buildTree wineData) 1) (DataEntry { dataPoint = V.fromList [8.2, 0.5, 0.35, 2.9, 7.7e-2, 21.0, 127.0, 0.9976, 3.23, 0.62, 9.4], label = Label "5"})
+        , bench "redwine k 5" $ nf (classify (buildTree wineData) 5) (DataEntry { dataPoint = V.fromList [8.2, 0.5, 0.35, 2.9, 7.7e-2, 21.0, 127.0, 0.9976, 3.23, 0.62, 9.4], label = Label "5"})
+        , bench "redwine k 10" $ nf (classify (buildTree wineData) 10) (DataEntry { dataPoint = V.fromList [8.2, 0.5, 0.35, 2.9, 7.7e-2, 21.0, 127.0, 0.9976, 3.23, 0.62, 9.4], label = Label "5"})
         ]
     , bgroup
-        "redwine"
-        [ bench "k 1" $
-          nf
-            (classify (buildTree wineData) 1)
-            (DataEntry
-               { dataPoint = V.fromList [8.2, 0.5, 0.35, 2.9, 7.7e-2, 21.0, 127.0, 0.9976, 3.23, 0.62, 9.4]
-               , label = Label "5"
-               })
-        , bench "k 5" $
-          nf
-            (classify (buildTree wineData) 5)
-            (DataEntry
-               { dataPoint = V.fromList [8.2, 0.5, 0.35, 2.9, 7.7e-2, 21.0, 127.0, 0.9976, 3.23, 0.62, 9.4]
-               , label = Label "5"
-               })
-        , bench "k 10" $
-          nf
-            (classify (buildTree wineData) 10)
-            (DataEntry
-               { dataPoint = V.fromList [8.2, 0.5, 0.35, 2.9, 7.7e-2, 21.0, 127.0, 0.9976, 3.23, 0.62, 9.4]
-               , label = Label "5"
-               })
-        , bench "1500 k5" $ nf (fmap (classify (buildTree wineData) 5)) (take 1500 wineDataLines)
-        , bench "15000 k5" $ nf (fmap (classify (buildTree wineData) 5)) (take 15000 wineDataLines)
-        , bench "150000 k5" $ nf (fmap (classify (buildTree wineData) 5)) (take 150000 wineDataLines)
+        "batch classify"
+        [ bench "redwine 1500 k5" $ nf (fmap (classify (buildTree wineData) 5)) (take 1500 wineDataLines)
+        , bench "redwine 15000 k5" $ nf (fmap (classify (buildTree wineData) 5)) (take 15000 wineDataLines)
+        , bench "redwine 150000 k5" $ nf (fmap (classify (buildTree wineData) 5)) (take 150000 wineDataLines)
+        , bench "iris 1500 k5" $ nf (fmap (classify (buildTree irisData) 5)) (take 1500 irisDataLines)
+        , bench "iris 15000 k5" $ nf (fmap (classify (buildTree irisData) 5)) (take 15000 irisDataLines)
+        , bench "iris 150000 k5" $ nf (fmap (classify (buildTree irisData) 5)) (take 150000 irisDataLines)
         ]
     ]
 

@@ -42,6 +42,9 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - mle-ue2
+    - cmdargs
+    - MonadRandom
+
 
   mle-ue2-bench:
     main: Main.hs
